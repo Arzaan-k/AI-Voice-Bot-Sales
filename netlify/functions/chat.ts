@@ -90,6 +90,8 @@ class SheetsService {
       const values = [[
         new Date(entry.timestamp).toISOString(),
         entry.sessionId,
+        entry.userMessage, // Full user message
+        entry.aiResponse, // Full AI response
         leadScore.overall || 0,
         leadScore.budget || 0,
         leadScore.authority || 0,
@@ -113,7 +115,7 @@ class SheetsService {
 
       await sheets.spreadsheets.values.append({
         spreadsheetId: this.spreadsheetId,
-        range: 'Conversations!A:U',
+        range: 'Conversations!A:W',
         valueInputOption: 'RAW',
         resource: { values },
       });

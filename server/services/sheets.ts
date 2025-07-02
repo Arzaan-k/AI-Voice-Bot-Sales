@@ -87,6 +87,8 @@ class SheetsService {
       const values = [[
         new Date(entry.timestamp).toISOString(),
         entry.sessionId,
+        entry.userMessage, // Full user message
+        entry.aiResponse, // Full AI response
         leadScore.overall || 0,
         leadScore.budget || 0,
         leadScore.authority || 0,
@@ -110,7 +112,7 @@ class SheetsService {
 
       await sheets.spreadsheets.values.append({
         spreadsheetId: this.spreadsheetId,
-        range: 'Conversations!A:U',
+        range: 'Conversations!A:W',
         valueInputOption: 'RAW',
         resource: { values },
       });
@@ -205,6 +207,8 @@ class SheetsService {
       const conversationHeaders = [
         'Timestamp',
         'Session ID',
+        'User Message',
+        'AI Response',
         'Lead Score (Overall)',
         'Budget Score',
         'Authority Score',
@@ -246,7 +250,7 @@ class SheetsService {
       try {
         await sheets.spreadsheets.values.update({
           spreadsheetId: this.spreadsheetId,
-          range: 'Conversations!A1:U1',
+          range: 'Conversations!A1:W1',
           valueInputOption: 'RAW',
           resource: { values: [conversationHeaders] },
         });

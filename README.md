@@ -15,6 +15,7 @@ A professional voice-enabled AI sales bot that uses Google Gemini AI and Web Spe
 
 The Google Sheets integration provides comprehensive analytics including:
 
+- **Full Conversation Transcripts**: Complete user and AI dialogue for review
 - **Lead Scoring**: Real-time BANT qualification scores
 - **Pain Point Analysis**: Automatic extraction of customer challenges
 - **Budget Intelligence**: Detection and classification of budget ranges

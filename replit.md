@@ -110,6 +110,7 @@ Changelog:
 - July 02, 2025. Enabled Google Sheets logging integration for conversation tracking
 - July 02, 2025. Enhanced Google Sheets with smart business intelligence analytics
 - July 02, 2025. Created Netlify deployment configuration for production
+- July 02, 2025. Added full conversation transcript logging to Google Sheets
 - July 02, 2025. Complete voice AI sales bot ready for production deployment
 ```
 
