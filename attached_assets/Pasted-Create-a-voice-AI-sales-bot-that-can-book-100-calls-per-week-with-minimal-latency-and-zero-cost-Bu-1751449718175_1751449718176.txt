@@ -1,0 +1,108 @@
+Create a voice AI sales bot that can book 100+ calls per week with minimal latency and zero cost. Build this as a complete web application with the following specifications:
+
+### Core Requirements:
+1. **Voice Input/Output**: Real-time speech-to-text and text-to-speech
+2. **AI Processing**: Groq API Llama 3 70B integration for conversation handling
+3. **Data Logging**: Save all conversations to Google Sheets automatically
+4. **Sales Focus**: Optimized for booking sales calls with qualifying questions
+5. **Zero Cost**: Use only free APIs and services
+6. **Low Latency**: < 2 seconds response time
+7. **Scalable**: Handle multiple concurrent conversations
+
+### Technical Stack:
+- **Frontend**: HTML5 + Vanilla JavaScript (no frameworks for speed)
+- **Voice**: Web Speech API (free, browser-native)
+- **AI**: Groq API (use free tier + efficient prompting)
+- **Database**: Google Sheets API (free tier)
+- **Hosting**: Vercel/Netlify (free hosting)
+- **Backend**: Serverless functions (Vercel/Netlify functions)
+
+### Free API Setup:
+1. **Groq API**: free credit 
+2. **Google Sheets API**: Free up to 100 requests/100 seconds
+3. **Web Speech API**: Completely free, browser-native
+4. **Deployment**: Free tier hosting
+
+### Voice Bot Persona:
+- Name: "Alex" - Professional Sales Assistant
+- Tone: Friendly, confident, consultative
+- Goal: Book qualified sales calls
+- Qualification criteria: Budget, Authority, Need, Timeline (BANT)
+
+### Implementation Files Needed:
+
+#### 1. index.html (Main Interface)
+- Clean, professional UI
+- Microphone controls
+- Real-time conversation display
+- Call booking form integration
+- Mobile-responsive design
+
+#### 2. app.js (Core Logic)
+- Voice recognition setup
+- Real-time audio processing
+- AI conversation management
+- Google Sheets integration
+- Error handling and fallbacks
+
+#### 3. api/chat.js (Serverless Function)
+- Groq API integration
+- Conversation context management
+- Response optimization for speed
+- Token usage optimization
+
+#### 4. api/sheets.js (Data Logging)
+- Google Sheets API integration
+- Real-time conversation logging
+- Lead qualification scoring
+- Call booking data structure
+
+#### 5. style.css (UI/UX)
+- Professional sales-focused design
+- Voice activity indicators
+- Loading states
+- Mobile optimization
+
+### Conversation Flow:
+1. **Greeting**: Warm introduction and value proposition
+2. **Discovery**: Ask qualifying questions (BANT framework)
+3. **Objection Handling**: Address common concerns
+4. **Booking**: Schedule call with calendar integration
+5. **Confirmation**: Capture contact details and send confirmation
+
+### Google Sheets Structure:
+- Timestamp
+- Conversation ID
+- Full Transcript
+- Lead Score (1-10)
+- Contact Information
+- Qualification Status
+- Booked Call DateTime
+- Follow-up Required
+
+### Performance Optimizations:
+- Streaming responses from OpenAI
+- Voice synthesis caching
+- Conversation context pruning
+- Concurrent request handling
+- Error recovery mechanisms
+
+### Deployment Instructions:
+1. Set up Google Sheets API credentials
+2. Configure OpenAI API key
+3. Deploy to Vercel with environment variables
+4. Test voice recognition across browsers
+5. Monitor API usage and costs
+
+### Sales Script Framework:
+Create an AI prompt that handles:
+- Warm greetings and rapport building
+- Product/service value proposition
+- Qualifying questions (budget, timeline, decision maker)
+- Objection handling responses
+- Calendar booking flow
+- Contact information capture
+
+Build this as a production-ready application that can immediately start booking sales calls with minimal setup and zero ongoing costs.
+
+Revert
