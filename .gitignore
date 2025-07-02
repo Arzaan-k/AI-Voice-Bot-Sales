@@ -1,6 +1,42 @@
-node_modules
-dist
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build files
+dist/
+build/
+.serverless/
+.fusebox/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 .DS_Store
-server/public
-vite.config.ts.*
+
+# Local Netlify folder
+.netlify
+
+# Credentials
+attached_assets/*.json
 *.tar.gz
+
+# Local development
+.server/
