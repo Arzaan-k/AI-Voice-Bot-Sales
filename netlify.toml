@@ -1,29 +1,27 @@
 [build]
-  # Build command
-  command = "npm run build"
-  # Directory with the static files
-  publish = "dist"
+  command = "npm run netlify-build"
+  publish = "dist/public"
+  functions = "netlify/functions"
 
-[functions]
-  # Directory with the Netlify functions
-  directory = "netlify/functions"
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
+  NPM_TOKEN = "dummy_value"  # Required for private packages if any
 
+# Redirect all requests to the serverless function
 [[redirects]]
-  # API routes to serverless functions
   from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  to = "/.netlify/functions/server"
   status = 200
+  force = true
 
+# SPA fallback - redirect all other requests to index.html
 [[redirects]]
-  # SPA fallback
   from = "/*"
   to = "/index.html"
   status = 200
 
-[build.environment]
-  NODE_VERSION = "20"
-
-# Headers for security
+# Security headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -31,10 +29,32 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.googleapis.com https://*.groq.com;"
 
+# API headers
 [[headers]]
   for = "/api/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Headers = "Content-Type"
-    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Credentials = "true"
+
+[functions]
+  # Use esbuild for better performance
+  node_bundler = "esbuild"
+  # Include required external modules
+  external_node_modules = ["@google/genai", "@neondatabase/serverless", "express", "serverless-http"]
+  # Include shared files
+  included_files = ["shared/**"]
+  # Increase function timeout to 10 seconds (Netlify's max for non-enterprise)
+  timeout = 10
+
+# Development settings
+[dev]
+  # Local development server port
+  port = 8888
+  # Auto-launch browser
+  autoLaunch = true
+  # Framework to use for local development
+  framework = "#custom"
