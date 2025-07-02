@@ -105,7 +105,10 @@ This is a voice-enabled AI sales bot application designed to handle 100+ sales c
 
 ```
 Changelog:
-- July 02, 2025. Initial setup
+- July 02, 2025. Initial setup with Gemini AI integration
+- July 02, 2025. Switched from Groq to Google Gemini 2.5 Flash model for free AI processing
+- July 02, 2025. Enabled Google Sheets logging integration for conversation tracking
+- July 02, 2025. Complete voice AI sales bot ready for production deployment
 ```
 
 ## User Preferences

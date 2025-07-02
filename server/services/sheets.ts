@@ -1,4 +1,5 @@
 import { GoogleAuth } from 'google-auth-library';
+import { google } from 'googleapis';
 
 interface ConversationLogEntry {
   sessionId: string;
@@ -24,11 +25,38 @@ class SheetsService {
   constructor() {
     this.spreadsheetId = process.env.GOOGLE_SHEETS_ID || '';
     
-    // Initialize Google Auth
+    // Initialize Google Auth with better error handling
+    let credentials;
+    try {
+      if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+        // Try to parse the service account key
+        const keyString = process.env.GOOGLE_SERVICE_ACCOUNT_KEY.trim();
+        
+        // Check if it's already JSON
+        if (keyString.startsWith('{')) {
+          credentials = JSON.parse(keyString);
+          console.log('Successfully parsed Google Service Account Key');
+        } else {
+          // Try base64 decode
+          try {
+            const decoded = Buffer.from(keyString, 'base64').toString('utf-8');
+            credentials = JSON.parse(decoded);
+            console.log('Successfully decoded and parsed Google Service Account Key');
+          } catch {
+            console.warn('Could not parse Google Service Account Key. Please ensure it is valid JSON format.');
+            credentials = undefined;
+          }
+        }
+      } else {
+        console.warn('GOOGLE_SERVICE_ACCOUNT_KEY environment variable not found');
+      }
+    } catch (error: any) {
+      console.error('Failed to parse Google Service Account Key:', error?.message || error);
+      credentials = undefined;
+    }
+
     this.auth = new GoogleAuth({
-      credentials: process.env.GOOGLE_SERVICE_ACCOUNT_KEY 
-        ? JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY)
-        : undefined,
+      credentials,
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
   }
@@ -41,7 +69,7 @@ class SheetsService {
       }
 
       const authClient = await this.auth.getClient();
-      const sheets = require('googleapis').google.sheets({ version: 'v4', auth: authClient });
+      const sheets = google.sheets({ version: 'v4', auth: authClient });
 
       const values = [[
         new Date(entry.timestamp).toISOString(),
@@ -76,7 +104,7 @@ class SheetsService {
       }
 
       const authClient = await this.auth.getClient();
-      const sheets = require('googleapis').google.sheets({ version: 'v4', auth: authClient });
+      const sheets = google.sheets({ version: 'v4', auth: authClient });
 
       const values = [[
         new Date(entry.timestamp).toISOString(),
@@ -115,7 +143,37 @@ class SheetsService {
       }
 
       const authClient = await this.auth.getClient();
-      const sheets = require('googleapis').google.sheets({ version: 'v4', auth: authClient });
+      const sheets = google.sheets({ version: 'v4', auth: authClient });
+
+      // First, try to create the worksheets if they don't exist
+      try {
+        await sheets.spreadsheets.batchUpdate({
+          spreadsheetId: this.spreadsheetId,
+          resource: {
+            requests: [
+              {
+                addSheet: {
+                  properties: {
+                    title: 'Conversations',
+                  },
+                },
+              },
+              {
+                addSheet: {
+                  properties: {
+                    title: 'Bookings',
+                  },
+                },
+              },
+            ],
+          },
+        });
+      } catch (error: any) {
+        // Sheets might already exist, which is fine
+        if (!error.message?.includes('already exists')) {
+          console.log('Worksheets already exist or other issue:', error.message);
+        }
+      }
 
       // Create headers for Conversations sheet
       const conversationHeaders = [
@@ -145,24 +203,28 @@ class SheetsService {
         'Status',
       ];
 
-      // Add headers if sheets don't exist
-      await sheets.spreadsheets.values.update({
-        spreadsheetId: this.spreadsheetId,
-        range: 'Conversations!A1:H1',
-        valueInputOption: 'RAW',
-        resource: { values: [conversationHeaders] },
-      });
+      // Add headers to both sheets
+      try {
+        await sheets.spreadsheets.values.update({
+          spreadsheetId: this.spreadsheetId,
+          range: 'Conversations!A1:H1',
+          valueInputOption: 'RAW',
+          resource: { values: [conversationHeaders] },
+        });
 
-      await sheets.spreadsheets.values.update({
-        spreadsheetId: this.spreadsheetId,
-        range: 'Bookings!A1:L1',
-        valueInputOption: 'RAW',
-        resource: { values: [bookingHeaders] },
-      });
+        await sheets.spreadsheets.values.update({
+          spreadsheetId: this.spreadsheetId,
+          range: 'Bookings!A1:L1',
+          valueInputOption: 'RAW',
+          resource: { values: [bookingHeaders] },
+        });
 
-      console.log('Google Sheets initialized successfully');
-    } catch (error) {
-      console.error('Failed to initialize Google Sheets:', error);
+        console.log('Google Sheets initialized successfully');
+      } catch (error: any) {
+        console.error('Failed to add headers to sheets:', error.message);
+      }
+    } catch (error: any) {
+      console.error('Failed to initialize Google Sheets:', error.message);
     }
   }
 }

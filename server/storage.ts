@@ -50,6 +50,9 @@ export class MemStorage implements IStorage {
     const conversation: Conversation = {
       ...insertConversation,
       id,
+      contactInfo: insertConversation.contactInfo || null,
+      bookingInfo: insertConversation.bookingInfo || null,
+      qualificationStatus: insertConversation.qualificationStatus || "in_progress",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
